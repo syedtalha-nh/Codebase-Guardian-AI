@@ -1,4 +1,10 @@
-// Codebase Guardian AI Demo
+const readline = require("readline");
+const chalk = require("chalk");
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
 const samples = [
 `var x = 10
@@ -25,43 +31,72 @@ function getRandomCode() {
 }
 
 function reviewCode(code) {
-    console.log("\n😤 Codebase Guardian AI Review:\n");
+    console.log(chalk.red("\n😤 Codebase Guardian AI Review:\n"));
 
     if (code.includes("if(") && code.includes("=") && !code.includes("==")) {
-        console.log("❌ Issue: You're using assignment (=) instead of comparison (== or ===). Classic bug.");
+        console.log(chalk.red("❌ Issue: Assignment (=) used instead of comparison (== or ===)"));
     }
 
     if (code.includes("<=arr.length")) {
-        console.log("❌ Issue: Array index out of bounds. You're going one step too far.");
-    }
-
-    if (code.includes("toUpperCase") && code.includes("undefined")) {
-        console.log("❌ Issue: You're calling a method on something that might be undefined.");
+        console.log(chalk.red("❌ Issue: Array index out of bounds"));
     }
 
     if (code.includes("add(2)")) {
-        console.log("❌ Issue: Missing parameter. Function expects 2 arguments.");
+        console.log(chalk.red("❌ Issue: Missing function argument"));
     }
 
-    console.log("\n💡 Suggestions:");
-    console.log("- Always validate inputs");
-    console.log("- Use strict equality (===)");
-    console.log("- Follow clean coding practices");
+    if (code.includes("user.name")) {
+        console.log(chalk.red("❌ Issue: Possible undefined access (user.name)"));
+    }
 
-    console.log("\n📚 Explanation:");
-    console.log("This code has logical issues that could break execution. A good developer writes defensive and predictable code.");
+    console.log(chalk.yellow("\n💡 Suggestions:"));
+    console.log("- Use === instead of =");
+    console.log("- Validate inputs");
+    console.log("- Avoid out-of-bound loops");
 
-    console.log("\n✨ Improved Version:\n");
+    console.log(chalk.blue("\n📚 Explanation:"));
+    console.log("This code contains common mistakes that can break real-world applications.");
 
-    console.log(`// Example Fix
-if (x === 5) {
+    console.log(chalk.green("\n✨ Improved Example:\n"));
+    console.log(`if (x === 5) {
     console.log("correct");
 }`);
 }
 
-const code = getRandomCode();
+function start() {
+    console.log(chalk.cyan("\n=== Codebase Guardian AI 😤 ==="));
+    console.log("1. Paste your code");
+    console.log("2. Run random demo\n");
 
-console.log("\n📄 Random Code Given:\n");
-console.log(code);
+    rl.question("Choose option: ", (choice) => {
+        if (choice === "1") {
+            console.log("\nPaste your code (press ENTER twice to finish):\n");
 
-reviewCode(code);
+            let input = "";
+
+            rl.on("line", (line) => {
+                if (line === "") {
+                    reviewCode(input);
+                    rl.close();
+                } else {
+                    input += line + "\n";
+                }
+            });
+
+        } else if (choice === "2") {
+            const code = getRandomCode();
+
+            console.log(chalk.magenta("\n📄 Random Code:\n"));
+            console.log(code);
+
+            reviewCode(code);
+            rl.close();
+
+        } else {
+            console.log("Invalid choice");
+            rl.close();
+        }
+    });
+}
+
+start();
