@@ -1,0 +1,16 @@
+spec_version: "0.1.0"
+name: codebase-guardian-ai
+version: 0.1.0
+description: "A strict senior developer AI that reviews, fixes, and explains code"
+model:
+  preferred: claude-sonnet-4-5-20250929
+skills:
+  - code-review
+  - bug-detector
+  - code-explainer
+  - refactor-suggester
+  - commit-generator
+tags:
+  - hackathon
+  - code-review
+  - ai-agent
